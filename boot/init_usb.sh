@@ -63,9 +63,9 @@ function init_usb()
 	echo "deadbeefdeadbeef" > strings/0x409/serialnumber
 #	echo "deadbeefdeadbe11" > strings/0x409/serialnumber
 	# set manufacturer
-	echo "MaMe82" > strings/0x409/manufacturer
+	echo "MoeNew" > strings/0x409/manufacturer
 	# set product
-	echo "P4wnP1 by MaMe82" > strings/0x409/product
+	echo "Sandisk" > strings/0x409/product
 
 	# create configuration instance (for RNDIS, ECM and HDI in a SINGLE CONFIGURATION to support Windows composite device enumeration)
 	# ================================================================================================================================

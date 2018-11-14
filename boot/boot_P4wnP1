@@ -129,7 +129,7 @@ fi
 
 # change hostname to make P4wnP1 resolveable on "name.local"
 if $WIFI || $USB_ETHERNET; then
-	hostname="MAME82-P4WNP1"
+	hostname="ZeroW"
 
 	hostname $hostname
 	echo $hostname > /etc/hostname
