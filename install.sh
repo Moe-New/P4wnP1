@@ -57,8 +57,8 @@ echo "Backing up resolv.conf"
 sudo cp /etc/resolv.conf /tmp/resolv.conf
 
 echo "Installing needed packages..."
-sudo apt-get -y update
-sudo apt-get -y upgrade # include patched bluetooth stack
+sudo apt -y update
+sudo apt -y upgrade # include patched bluetooth stack
 #if $WIFI; then
 #	sudo apt-get install -y dnsmasq git python-pip python-dev screen sqlite3 inotify-tools hostapd
 #else
@@ -66,7 +66,7 @@ sudo apt-get -y upgrade # include patched bluetooth stack
 #fi
 
 # hostapd gets installed in even if WiFi isn't present (SD card could be moved from "Pi Zero" to "Pi Zero W" later on)
-sudo apt-get -y install dnsmasq git python-pip python-dev screen sqlite3 inotify-tools hostapd autossh bluez bluez-tools bridge-utils ethtool  policykit-1 tshark tcpdump iodine
+sudo apt -y install dnsmasq git python-pip python-dev screen sqlite3 inotify-tools hostapd autossh bluez bluez-tools bridge-utils ethtool  policykit-1 tshark tcpdump iodine
 
 
 # at this point the nameserver in /etc/resolv.conf is set to 127.0.0.1, so we replace it with 8.8.8.8
