@@ -1,3 +1,4 @@
+#
 USB_VID="0x1d6b"        # Vendor ID
 USB_PID=$(printf "0x%04X" $RANDOM)        # Random PID to raise chance of driver reinstall
 

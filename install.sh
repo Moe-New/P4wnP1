@@ -34,29 +34,29 @@ wdir=$( cd $(dirname $BASH_SOURCE[0]) && pwd)
 if $wdir/wifi/check_wifi.sh; then WIFI=true; else WIFI=false; fi
 
 # check Internet conectivity against 
-echo "Testing Internet connection and name resolution..."
+echo "检测网络连接 ..."
 if [ "$(curl -s http://www.msftncsi.com/ncsi.txt)" != "Microsoft NCSI" ]; then 
-        echo "...[Error] No Internet connection or name resolution doesn't work! Exiting..."
+        echo "... 网络检测失败,退出 ..."
         exit
 fi
-echo "...[pass] Internet connection works"
+echo "... [pass] 网络正常."
 
 # check for Raspbian Jessie
-echo "Testing if the system runs Raspbian Jessie or Stretch..."
+echo "检测系统版本是否为 Jessie 或 Stretch ..."
 if ! (grep -q -E "Raspbian.*jessie" /etc/os-release || grep -q -E "Raspbian.*stretch" /etc/os-release) ; then
         echo "...[Error] Pi is not running Raspbian Jessie or Stretch! Exiting ..."
         exit
 fi
-echo "...[pass] Pi seems to be running Raspbian Jessie or Stretch"
+echo "... [pass] 系统版本正确."
 if (grep -q -E "Raspbian.*stretch" /etc/os-release) ; then
 	STRETCH=true
 fi
 
 
-echo "Backing up resolv.conf"
+echo "备份 /etc/resolv.conf 到 /tmp/"
 sudo cp /etc/resolv.conf /tmp/resolv.conf
 
-echo "Installing needed packages..."
+echo "更新软件包并安装所需软件包 ..."
 sudo apt -y update
 sudo apt -y upgrade # include patched bluetooth stack
 #if $WIFI; then
@@ -66,8 +66,7 @@ sudo apt -y upgrade # include patched bluetooth stack
 #fi
 
 # hostapd gets installed in even if WiFi isn't present (SD card could be moved from "Pi Zero" to "Pi Zero W" later on)
-sudo apt -y install dnsmasq git python-pip python-dev screen sqlite3 inotify-tools hostapd autossh bluez bluez-tools bridge-utils ethtool  policykit-1 tshark tcpdump iodine
-
+sudo apt -y install autossh bluez bluez-tools bridge-utils dnsmasq ethtool git hostapd inotify-tools iodine policykit-1 python-dev python-pip screen sqlite3 tcpdump tshark vim
 
 # at this point the nameserver in /etc/resolv.conf is set to 127.0.0.1, so we replace it with 8.8.8.8
 #	Note: 
@@ -80,7 +79,7 @@ sudo bash -c "cat /tmp/resolv.conf > /etc/resolv.conf"
 sudo bash -c "echo nameserver 8.8.8.8 >> /etc/resolv.conf"
 
 # install pycrypto
-echo "Installing needed python additions..."
+echo "安装所需的 python 包 ..."
 # Fix: issue of conflicting filename 'setup.cfg' with paython setuptools
 # Reported by  PoSHMagiC0de
 # https://github.com/mame82/P4wnP1/issues/52#issuecomment-325236711
@@ -95,7 +94,7 @@ mv setup.bkp setup.cfg
 #git clone -b EMULATE_INTERNET_AND_WPAD_ANYWAY --single-branch https://github.com/mame82/Responder
 
 # disable interfering services
-echo "Disabeling unneeded services to shorten boot time ..."
+echo "禁用不需要的服务以缩短启动时间 ..."
 sudo update-rc.d ntp disable # not needed for stretch (only jessie)
 sudo update-rc.d avahi-daemon disable
 sudo update-rc.d dhcpcd disable
@@ -108,16 +107,16 @@ echo "Create udev rule for HID devices..."
 echo 'SUBSYSTEM=="hidg",KERNEL=="hidg[0-9]", MODE="0666"' > /tmp/udevrule
 sudo bash -c 'cat /tmp/udevrule > /lib/udev/rules.d/99-usb-hid.rules'
 
-echo "Enable SSH server..."
+echo "启用 ssh 服务 ..."
 sudo update-rc.d ssh enable
 
-echo "Checking network setup.."
+echo "检测网络初始化 ..."
 # set manual configuration for usb0 (RNDIS) if not already done
 if ! grep -q -E '^iface usb0 inet manual$' /etc/network/interfaces; then
-	echo "Entry for manual configuration of RNDIS interface not found, adding..."
+	echo "未找到 RNDIS 配置,添加 ..."
 	sudo /bin/bash -c "printf '\niface usb0 inet manual\n' >> /etc/network/interfaces"
 else
-	echo "Entry for manual configuration of RNDIS interface found"
+	echo "发现 RNDIS 配置"
 fi
 
 # set manual configuration for usb1 (CDC ECM) if not already done
@@ -150,10 +149,12 @@ sudo chmod a+r /var/www/index.html
 
 
 # create 128 MB image for USB storage
-echo "Creating 128 MB image for USB Mass Storage emulation"
+echo "创建 3.81G 镜像,用于模拟 USB 大容量存储"
 mkdir -p $wdir/USB_STORAGE
-dd if=/dev/zero of=$wdir/USB_STORAGE/image.bin bs=1M count=128
-mkdosfs $wdir/USB_STORAGE/image.bin
+#dd if=/dev/zero of=$wdir/USB_STORAGE/image.bin bs=1M count=128
+#mkdosfs $wdir/USB_STORAGE/image.bin
+mkdosfs -C $wdir/USB_STORAGE/image.bin 3995074
+#创建假装 3.81G 的文件
 
 # create folder to store loot found
 mkdir -p $wdir/collected
@@ -213,7 +214,7 @@ fi
 sudo systemctl enable P4wnP1-bt-nap.service
 
 if ! grep -q -E '^.+P4wnP1 STARTUP$' /home/pi/.profile; then
-	echo "Adding P4wnP1 startup script to /home/pi/.profile..."
+	echo "添加 P4wnP1 初始配置到 /home/pi/.profile..."
 cat << EOF >> /home/pi/.profile
 # P4wnP1 STARTUP
 source /tmp/profile.sh
@@ -222,11 +223,11 @@ EOF
 fi
 
 # removing FSCK from fstab, as this slows down boot (jumps in on stretch nearly every boot)
-echo "Disable FSCK on boot ..."
+echo "禁止启动时检查文件系统（FSCK） ..."
 sudo sed -i -E 's/[12]$/0/g' /etc/fstab
 
 # enable autologin for user pi (requires RASPBIAN JESSIE LITE, should be checked)
-echo "Enable autologin for user pi..."
+echo "启用自动登录 ..."
 sudo ln -fs /etc/systemd/system/autologin@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
 
 # setup USB gadget capable overlay FS (needs Pi Zero, but shouldn't be checked - setup must 
@@ -242,7 +243,7 @@ sudo sed -n -i -e '/^libcomposite/!p' -e '$alibcomposite' /etc/modules
 echo "Removing all former modules enabled in /boot/cmdline.txt..."
 sudo sed -i -e 's/modules-load=.*dwc2[',''_'a-zA-Z]*//' /boot/cmdline.txt
 
-echo "Installing kernel update ..."
+echo "安装内核更新 ..."
 # still needed on current stretch releas, kernel 4.9.41+ ships still
 # with broken HID gadget module (installing still needs a cup of coffee)
 # Note:  last working Jessie version was the one with kernel 4.4.50+
