@@ -5,6 +5,7 @@ USB_PID="0x0437"        # Product ID
 USE_ECM=false            # if true CDC ECM will be enabled
 USE_RNDIS=false          # if true RNDIS will be enabled
 USE_HID=true            # if true HID (keyboard) will be enabled
+USE_HID_MOUSE=true
 USE_RAWHID=true         # if true HID raw device will be enabled
 USE_UMS=false           # if true USB Mass Storage will be enabled
 
