@@ -1,16 +1,16 @@
 #
-USB_VID="0x1D6B"        # Vendor ID
-USB_PID="0x0437"        # Product ID
+USB_VID="0x1D6B"
+USB_PID="0x0437"
 
-USE_ECM=false            # if true CDC ECM will be enabled
-USE_RNDIS=false          # if true RNDIS will be enabled
-USE_HID=true            # if true HID (keyboard) will be enabled
+USE_ECM=false
+USE_RNDIS=false
+USE_HID=true
 USE_HID_MOUSE=true
-USE_RAWHID=true         # if true HID raw device will be enabled
-USE_UMS=false           # if true USB Mass Storage will be enabled
+USE_RAWHID=true
+USE_UMS=false
 
-# disable setting of static routes for all IPv4 addresses
 ROUTE_SPOOF=false
+WPAD_ENTRY=false
 
 # use LED based HID keyboard test
 USE_HID_TEST=true

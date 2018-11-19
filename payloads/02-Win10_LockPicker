@@ -1,25 +1,24 @@
 #
-USB_VID="0x1d6b"        # Vendor ID
-USB_PID=$(printf "0x%04X" $RANDOM)        # Random PID to raise chance of driver reinstall
+USB_VID="0x1d6b"
+USB_PID=$(printf "0x%04X" $RANDOM)
 
-USE_ECM=false            # we need no Linux/Mac networking
-USE_RNDIS=true          # RNDIS network device to enable hash stealing
-USE_HID=true            # HID keyboard to allow entering cracked password
-USE_UMS=false           # no mass storage
+USE_ECM=false
+USE_RNDIS=true
+USE_HID=true
+USE_HID_MOUSE=false
+USE_RAWHID=false
+USE_UMS=false
 
-lang="us" # MAKE THE KEYBOARD LANGUAGE MATCH THE TARGET
+ROUTE_SPOOF=true
+WPAD_ENTRY=true
 
-# ==========================
-# Network and DHCP options
-# ==========================
+WIFI_CLIENT=true
 
-IF_IP="172.16.0.1" # IP used by P4wnP1
-IF_MASK="255.255.255.252" 
-IF_DHCP_RANGE="172.16.0.2,172.16.0.2" # DHCP Server IP Range
+BLUETOOTH_NAP=true
 
-ROUTE_SPOOF=true # set two static routes on target to cover whole IPv4 range, raise chance of capturing packets with hashes
-WPAD_ENTRY=true # provide a WPAD entry via DHCP pointing to responder
+AUTOSSH_ENABLED=false
 
+lang="us"
 
 # define some helper functions and custom vars
 CRACK=true # enable cracking of dumped hashes on P4wnP1
