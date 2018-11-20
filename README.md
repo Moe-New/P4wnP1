@@ -1,7 +1,15 @@
 P4wnP1 by MaMe82
 ================
 
-P4wnP1 是一个高度可定制的USB攻击平台，用于 RPi Zero 或 RPi Zero W .
+P4wnP1 是一个高度可定制的 USB 攻击平台，可在 RPi Zero 和 RPi Zero W  使用。
+
+本 Fork 项目只在 RPi Zero W 测试，兼容性和原项目可能有所区别。
+
+修改目标：
+
+- 为移动设备控制优化；
+- 汉化/简化脚本操作；
+- 添加自定义实用脚本。
 
 Important
 ---------
