@@ -1,0 +1,32 @@
+#!/bin/bash
+PS3="选择:"
+file=mode
+
+clist=(
+"01-network_only"
+"02-Win10_LockPicker"
+"03-hid_backdoor"
+"stickykey/payload.txt"
+"stickykey/remove.txt"
+"stickykey/trigger.txt"
+)
+
+info(){
+	echo "PAYLOAD=$1" > $file
+}
+
+select mode in ${clist[@]}
+do
+	#case "$mode" in
+   	#"quit")
+	#break
+        #;;
+	#*)
+	info $mode
+	break
+	#break
+	#;;
+	#esac
+done
+
+echo -e "\033[32m操作完成，文件内容：\033[0m\n\033[36m`cat $file`\033[0m"
