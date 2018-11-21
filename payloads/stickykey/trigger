@@ -37,6 +37,7 @@ USE_HID=true        # HID keyboard to allow entering cracked password
 USE_UMS=false # enable USB Mass Storage
 
 lang="us" # MAKE THE KEYBOARD LANGUAGE MATCH THE TARGET or remove this line to use the setting from setup.cfg
+HID_KEYBOARD_TEST=true
 
 function onKeyboardUp()
 {

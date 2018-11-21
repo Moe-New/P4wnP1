@@ -3,12 +3,12 @@ PS3="选择:"
 file=mode
 
 clist=(
-"01-network_only"
-"02-Win10_LockPicker"
-"03-hid_backdoor"
-"stickykey/payload.txt"
-"stickykey/remove.txt"
-"stickykey/trigger.txt"
+"network_only"
+"Win10_LockPicker"
+"hid_backdoor"
+"stickykey/add"
+"stickykey/remove"
+"stickykey/trigger"
 )
 
 info(){
