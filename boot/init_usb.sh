@@ -65,7 +65,7 @@ function init_usb()
 	# set manufacturer
 	echo "MoeNew" > strings/0x409/manufacturer
 	# set product
-	echo "Sandisk" > strings/0x409/product
+	echo "ZeroW" > strings/0x409/product
 
 	# create configuration instance (for RNDIS, ECM and HDI in a SINGLE CONFIGURATION to support Windows composite device enumeration)
 	# ================================================================================================================================
