@@ -1,0 +1,8 @@
+#
+BLUETOOTH_NAP_PIN=1337 # unused, PIN authentication currently not working (custom agent for bluez 5 needed)
+BLUETOOTH_NAP_IP="172.26.0.1" # IP used by P4wnP1
+BLUETOOTH_NAP_NETMASK="255.255.255.0"
+BLUETOOTH_NAP_DHCP_RANGE="172.26.0.2,172.26.0.10" # DHCP Server IP Range
+BLUETOOTH_PAN_AUTO=false        # Overides BLUETOOTH_NAP !! Instead of providing a NAP P4wnP1 tries to use an existing bluetooth NAP as soon as a device providing one has paired 
+                                # AND CONNECTED (not the common behavior for a device providing bluetooth tethering, but possible)
+                                # Important: P4wnP1 doesn't try to pair or connect a device on its own, but is discoverable (although no bluetooth services are provided)

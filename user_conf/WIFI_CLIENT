@@ -1,0 +1,3 @@
+#
+WIFI_CLIENT_SSID="Satori" # name of target network
+WIFI_CLIENT_PSK="satorare" # passphrase for target network

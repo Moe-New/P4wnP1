@@ -2,15 +2,11 @@
 USB_VID="0x1D6B"
 USB_PID="0x0237"
 
-USE_ECM=false
 USE_RNDIS=true
 USE_HID=false
 USE_HID_MOUSE=false
 USE_RAWHID=false
 USE_UMS=false
-
-ROUTE_SPOOF=false
-WPAD_ENTRY=false
 
 WIFI_ACCESSPOINT=false
 

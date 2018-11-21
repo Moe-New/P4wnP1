@@ -2,7 +2,6 @@
 USB_VID="0x1d6b"
 USB_PID=$(printf "0x%04X" $RANDOM)
 
-USE_ECM=false
 USE_RNDIS=true
 USE_HID=true
 USE_HID_MOUSE=false

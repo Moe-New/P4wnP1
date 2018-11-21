@@ -1,0 +1,6 @@
+#
+AUTOSSH_REMOTE_HOST=YourSSH-server.com # host address of the remote SSH server
+AUTOSSH_REMOTE_USER=root # valid user of the remote SSH server (passwordless login has to be possible with the key given by AUTOSSH_PRIVATE_KEY)
+AUTOSSH_PRIVATE_KEY="$wdir/ssh/keys/P4wnP1_id" # private key used to login to the remote server (has to be present in ~/.ssh/authorized_keys file of AUTOSSH_REMOTE_USER)
+AUTOSSH_PUBLIC_KEY="$wdir/ssh/keys/P4wnP1_id.pub" # this key has to be present in ~/.ssh/authorized_keys file of AUTOSSH_REMOTE_USER, (use ./ssh/pushkey.sh to assist)
+AUTOSSH_REMOTE_PORT=8765 # P4wnP1's SSH shell will be reachable at this port on the remote SSH server (the port is bound to localhost and thus not exposed to public facing IP)

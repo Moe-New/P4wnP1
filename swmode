@@ -1,6 +1,6 @@
 #!/bin/bash
 PS3="选择:"
-file=mode
+file=./user_conf/PAYLOAD
 
 clist=(
 "network_only"

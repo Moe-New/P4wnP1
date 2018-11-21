@@ -26,8 +26,6 @@
 # =============================
 USB_VID="0x1d6b"    # Vendor ID
 USB_PID="0x1004"    # Product ID
-USE_ECM=false       # we need no Linux/Mac networking
-USE_RNDIS=true      # RNDIS network device to enable hash stealing
 USE_HID=true        # HID keyboard to allow entering cracked password
 USE_UMS=false # enable USB Mass Storage
 
@@ -40,6 +38,7 @@ function onKeyboardUp()
 {
 	# execute DuckyScript responsible for bringing up PowerShell
 	cat $wdir/DuckyScripts/stickykey_remove.duck | duckhid
+	led_blink 3
 }
 
 
