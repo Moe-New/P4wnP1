@@ -1,3 +1,5 @@
 #
-WIFI_CLIENT_SSID="Satori" # name of target network
-WIFI_CLIENT_PSK="satorare" # passphrase for target network
+WIFI_CLIENT_SSID="Accespoint Name" # name of target network
+WIFI_CLIENT_PSK="Accespoint password" # passphrase for target network
+WIFI_CLIENT_STORE_NETWORK=false # unused right now, should be used to store known networks, but priority has to be given if multiple known networks are present
+WIFI_CLIENT_OVERWRITE_PSK=true # unused right now, in case the network WIFI_CLIENT_STORE_NETWORK is set an existing PSK gets overwritten
