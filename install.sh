@@ -149,11 +149,11 @@ sudo chmod a+r /var/www/index.html
 
 
 # create 128 MB image for USB storage
-echo "创建 3.81G 镜像,用于模拟 USB 大容量存储"
+echo "创建 4,000,000 KB/3.9G 镜像,用于模拟 USB 大容量存储"
 mkdir -p $wdir/USB_STORAGE
 #dd if=/dev/zero of=$wdir/USB_STORAGE/image.bin bs=1M count=128
 #mkdosfs $wdir/USB_STORAGE/image.bin
-mkdosfs -C $wdir/USB_STORAGE/image.bin 3995074
+mkdosfs -C $wdir/USB_STORAGE/image.bin 4000000
 #创建假装 3.81G 的文件
 
 # create folder to store loot found
