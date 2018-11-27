@@ -16,3 +16,4 @@ BLUETOOTH_NAP=true
 
 AUTOSSH_ENABLED=false
 
+led_blink 1
