@@ -1,32 +1,26 @@
 #!/bin/bash
 PS3="选择:"
-file=./user_conf/PAYLOAD
-
-clist=(
-"network_only"
-"Win10_LockPicker"
-"hid_backdoor"
-"stickykey/add"
-"stickykey/remove"
-"stickykey/trigger"
-)
+conf=./user_conf/PAYLOAD
 
 info(){
-	echo "PAYLOAD=$1" > $file
+        echo "PAYLOAD=$1" > $conf
 }
+
+num=0
+for file in `ls -F ./payloads | grep -v "/"`
+do
+	clist[$num]="$file"
+	((num++))
+done
 
 select mode in ${clist[@]}
 do
-	#case "$mode" in
-   	#"quit")
-	#break
-        #;;
-	#*)
+	if [[ $mode == "" ]];then
+	echo "错误的选项。"
+	else
 	info $mode
 	break
-	#break
-	#;;
-	#esac
+	fi
 done
 
-echo -e "\033[32m操作完成，文件内容：\033[0m\n\033[36m`cat $file`\033[0m"
+echo -e "\033[32m操作完成，文件内容：\033[0m\n\033[36m`cat $conf`\033[0m"
