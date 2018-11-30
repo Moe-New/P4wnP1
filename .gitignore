@@ -1,1 +1,5 @@
 user_conf/
+USB_STORAGE/
+*.pyc
+ssh/
+john/
