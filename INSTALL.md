@@ -29,7 +29,7 @@
 
 因为该存储库引用了其他存储库的文件，所以使用 git 克隆文件需要 `--recursive` 选项。
 
-可使用[原项目](https://github.com/mame82/P4wnP1)或[本fork项目](https://github.com/Moe-New/P4wnP1)。
+可使用 [原项目](https://github.com/mame82/P4wnP1) 或 [本fork项目](https://github.com/Moe-New/P4wnP1)。
 
 执行 `./install.sh` 后将会开始安装，安装设置过程需要一些时间，请耐心等待，如果安装成功或者遇到错误，信息将会显示。
 
