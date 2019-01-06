@@ -102,7 +102,7 @@ sudo update-rc.d networking disable
 sudo update-rc.d avahi-daemon disable
 sudo update-rc.d dnsmasq disable # we start this by hand later on
 
-echo "Create udev rule for HID devices..."
+echo "为 HID 设备创建 udev 规则..."
 # rule to set access rights for /dev/hidg* to 0666 
 echo 'SUBSYSTEM=="hidg",KERNEL=="hidg[0-9]", MODE="0666"' > /tmp/udevrule
 sudo bash -c 'cat /tmp/udevrule > /lib/udev/rules.d/99-usb-hid.rules'
@@ -163,7 +163,7 @@ mkdir -p $wdir/collected
 # create systemd service unit for P4wnP1 startup
 # Note: switched to multi-user.target to make nexmon monitor mode work
 if [ ! -f /etc/systemd/system/P4wnP1.service ]; then
-        echo "Injecting P4wnP1 startup script..."
+        echo "安装 P4wnP1 启动脚本..."
         cat <<- EOF | sudo tee /etc/systemd/system/P4wnP1.service > /dev/null
                 [Unit]
                 Description=P4wnP1 Startup Service
@@ -190,7 +190,7 @@ sudo systemctl enable P4wnP1.service
 
 # create systemd service for bluetooth NAP
 if [ ! -f /etc/systemd/system/P4wnP1-bt-nap.service ]; then
-        echo "Injecting P4wnP1 BLUETOOTH NAP startup script..."
+        echo "安装 P4wnP1 蓝牙 NAP 脚本..."
         cat << EOF | sudo tee /etc/systemd/system/P4wnP1-bt-nap.service > /dev/null
 
 [Unit]
@@ -232,7 +232,7 @@ sudo ln -fs /etc/systemd/system/autologin@.service /etc/systemd/system/getty.tar
 
 # setup USB gadget capable overlay FS (needs Pi Zero, but shouldn't be checked - setup must 
 # be possible from other Pi to ease up Internet connection)
-echo "Enable overlay filesystem for USB gadgedt suport..."
+echo "启用 overlay filesystem 以支持 USB gadgedt ..."
 sudo sed -n -i -e '/^dtoverlay=/!p' -e '$adtoverlay=dwc2' /boot/config.txt
 
 # add libcomposite to /etc/modules
@@ -253,7 +253,7 @@ echo "安装内核更新 ..."
 #sudo rpi-update 913eddd6d23f14ce34ae473a4c080c5c840ed583 # force kernel 4.9.51+ for nexmon compatability
 
 # Raspbian stretch with Kernel >= 4.9.78+ (working bluetooth, nexmon module compiled for this version)
-sudo rpi-update 23a007716a0c6a8677097be859cf7063ae093d27
+#sudo rpi-update 23a007716a0c6a8677097be859cf7063ae093d27
 
 # ToDo: the correct branch of nexmon for the current update kernel should be checked out here,
 #       to do this the downloaded kernel version has to be feteched, which is only available after reboot from `uname -r`
