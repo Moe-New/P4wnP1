@@ -1,5 +1,9 @@
 # P4wnP1 by MaMe82
 
+**已停止更新，作为记录保存。**
+
+**请关注新项目 https://github.com/mame82/P4wnP1_aloa**
+
 P4wnP1 是一个高度可定制的 USB 攻击平台，可在 RPi Zero 和 RPi Zero W  使用。
 
 本 Fork 项目只在 RPi Zero W 测试，兼容性和原项目可能有所区别。
